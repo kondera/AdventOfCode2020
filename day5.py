@@ -28,6 +28,11 @@ def parse(line: str) -> Tuple[int, int]:
     col = calculate_from_list([0,7], col_instr)[0]
     return row, col
 
+def get_id_from_binary(line: str) -> int:
+    row = int(''.join(['1' if i == 'B' else '0' for i in line[:-3]]), 2)
+    col = int(''.join(['1' if i == 'R' else '0' for i in line[-3:]]), 2)
+    return row * 8 + col
+
 def calculate_id(line: str) -> int:
     r,c = parse(line)
     return r*8+c
@@ -37,7 +42,11 @@ def create_list_of_all_ids(lst: List[int]) -> List[int]:
 
 if __name__ == "__main__":
     with open('inputs/day5.txt') as f:
-        data = [calculate_id(line.strip()) for line in f.readlines()]
+        # old way:
+        # data = [calculate_id(line.strip()) for line in f.readlines()]
+        # and new way:
+        # yeah i didn't notice that binary code was the key
+        data = [get_id_from_binary(line.strip()) for line in f.readlines()]
         print(max(data))
         all_ids = create_list_of_all_ids(data)
         diff = [x for x in all_ids if x not in data]
